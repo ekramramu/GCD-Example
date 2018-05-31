@@ -19,7 +19,37 @@ class ViewController: UIViewController {
         super.viewWillAppear(true)
         //simpleQueue()
        // queuesWithQosAtrribute()
-        concurrentQueue()
+        
+       // concurrentQueue()
+        
+        if let queue = inactiveQueue {
+            queue.activate()
+        }
+        
+        gloablQueue()
+    }
+    var inactiveQueue:DispatchQueue!
+    func concurrentQueue(){
+        //create newQueue with userInitiated Qos
+        //let newQueue = DispatchQueue(label: "com.concurrent.ekram", qos: DispatchQoS.background, attributes: .concurrent)
+        let newQueue = DispatchQueue(label: "com.concurrent.ekram", qos: DispatchQoS.background, attributes: [.initiallyInactive,.concurrent])
+        inactiveQueue = newQueue
+        
+        newQueue.async {
+            for i in 0..<10 {
+                print("Custom Green Love: 💚",i)
+            }
+        }
+        newQueue.async {
+            for i in 0..<10 {
+                print("General Lover : ❤️",i)
+            }
+        }
+        newQueue.async {
+            for i in 0..<10 {
+                print("Yallow love :💛",i)
+            }
+        }
     }
 
     func simpleQueue() {
@@ -70,23 +100,15 @@ class ViewController: UIViewController {
         }
     }
     
-    func concurrentQueue(){
-        //create newQueue with userInitiated Qos
-        let newQueue = DispatchQueue(label: "com.concurrent.ekram", qos: DispatchQoS.background, attributes: .concurrent)
+    
+    func gloablQueue() {
         
-        newQueue.async {
+        //let globalQueue = DispatchQueue.global()
+        let globalQueue = DispatchQueue.global(qos: .background)
+        
+        globalQueue.async {
             for i in 0..<10 {
                 print("Custom Green Love: 💚",i)
-            }
-        }
-        newQueue.async {
-            for i in 0..<10 {
-                print("General Lover : ❤️",i)
-            }
-        }
-        newQueue.async {
-            for i in 0..<10 {
-                print("Yallow love :💛",i)
             }
         }
     }
