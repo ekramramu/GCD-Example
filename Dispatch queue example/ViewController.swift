@@ -13,33 +13,82 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
      
-        simpleQueue()
-     
+}
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        //simpleQueue()
+       // queuesWithQosAtrribute()
+        concurrentQueue()
     }
 
     func simpleQueue() {
         //create cuostom Queue
         let queue = DispatchQueue(label: "com.simpleQueue.Ekram")
         
-        //Sync Custom Queue
-        queue.sync {
+//        //Sync Custom Queue
+//        queue.sync {
+//            for i in 0..<10 {
+//                print("Custom Green Love:💚",i)
+//            }
+//        }
+        
+        // Async Custom Queue
+        queue.async {
             for i in 0..<10 {
                 print("Custom Green Love: 💚",i)
             }
         }
         
-//        // Async Custom Queue
-//        queue.async {
-//            for i in 0..<10 {
-//                print("Custom Green Love: 💚",i)
-//            }
-//        }
-//
         //Main Queue
         for i in 100..<110 {
-            print("Crazy Red Love : ❤️",i)
+            print("General Lover : ❤️",i)
         }
         
+    }
+    
+    func queuesWithQosAtrribute() {
+        
+        //create DispathQueue with Qos Attribute
+        let queueOne = DispatchQueue(label: "com.queues.ekram", qos: DispatchQoS.background)
+        let queueTwo = DispatchQueue(label: "com.queues.ekram", qos: DispatchQoS.utility)
+        
+        
+        queueOne.async {
+            for i in 0..<10 {
+                print("Custom Green Love: 💚",i)
+            }
+        }
+        queueTwo.async {
+            for i in 100..<110 {
+                print("General Lover : ❤️",i)
+            }
+        }
+        
+        for i in 500..<510 {
+            print("Yallow love :💛",i)
+        }
+    }
+    
+    func concurrentQueue(){
+        //create newQueue with userInitiated Qos
+        let newQueue = DispatchQueue(label: "com.concurrent.ekram", qos: DispatchQoS.background, attributes: .concurrent)
+        
+        newQueue.async {
+            for i in 0..<10 {
+                print("Custom Green Love: 💚",i)
+            }
+        }
+        newQueue.async {
+            for i in 0..<10 {
+                print("General Lover : ❤️",i)
+            }
+        }
+        newQueue.async {
+            for i in 0..<10 {
+                print("Yallow love :💛",i)
+            }
+        }
     }
 
 }
